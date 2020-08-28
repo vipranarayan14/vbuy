@@ -1,6 +1,6 @@
-import { client, q as query } from "../config/db";
+import { client, query } from "./db";
 
-const create = (text) =>
+const create = (text: string) =>
   client
     .query(
       query.Create(query.Collection("items"), {

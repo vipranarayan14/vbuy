@@ -1,4 +1,4 @@
-import { client, query } from "../config/db";
+import { client, query } from "./db";
 
 const getAll = client
   .query(query.Paginate(query.Match(query.Ref("indexes/items"))))
