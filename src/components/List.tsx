@@ -33,7 +33,7 @@ const ListItem: React.FC<ListItemProps> = ({ id, data, toggleBought }) => (
 export const List: React.FC<ListProps> = ({ list, ...props }) => (
   <ul>
     {list.map((item, id) => (
-      <ListItem id={id} data={item} {...props} />
+      <ListItem id={id} data={item} {...props} key={id} />
     ))}
   </ul>
 );
