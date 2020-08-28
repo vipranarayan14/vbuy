@@ -1,0 +1,12 @@
+.ListItem {
+  padding: 10;
+  margin-top: 5;
+  border-color: "grey";
+  background-color: "#ccc";
+  border-width: 1;
+}
+
+.ListItemBought {
+  text-decoration: line-through;
+  background-color: "#999";
+}
