@@ -10,6 +10,15 @@ const sampleList = [
   { name: "Item 2", bought: false },
 ];
 
+const addItem = async (item: ItemType) => {
+  const response = await fetch("/api/item-add", {
+    method: "POST",
+    body: JSON.stringify(item),
+  });
+
+  return response.status;
+};
+
 const replaceInList = (list: Array<any>, id: number, newItem: any) => [
   ...list.slice(0, id),
   newItem,
@@ -22,8 +31,15 @@ const byBought = (a: ItemType, b: ItemType) =>
 const App: React.FC = () => {
   const [list, setList] = useState<Array<ItemType>>([...sampleList]);
 
-  const addToList = (itemName: string) =>
-    setList(list.concat([{ name: itemName, bought: false }]));
+  const addToList = async (itemName: string) => {
+    const item = { name: itemName, bought: false };
+
+    const status = await addItem(item);
+
+    if (status === 200) {
+      setList(list.concat(item));
+    }
+  };
 
   const toggleBought = (id: number) => {
     const item = list[id];
