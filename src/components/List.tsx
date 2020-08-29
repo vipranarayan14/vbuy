@@ -2,19 +2,25 @@ import React from "react";
 
 import styles from "./List.module.css";
 
-export interface ItemType {
-  name: string;
-  bought: boolean;
-}
+export type ItemType = {
+  data: {
+    name: string;
+    bought: boolean;
+  };
+  ref: object;
+  ts: number;
+};
+
+export type ListType = Array<ItemType>;
 
 type ListProps = {
-  list: Array<ItemType>;
+  list: ListType;
   toggleBought: (id: number) => void;
 };
 
 type ListItemProps = {
   id: number;
-  data: ItemType;
+  data: ItemType["data"];
   toggleBought: ListProps["toggleBought"];
 };
 
@@ -33,7 +39,7 @@ const ListItem: React.FC<ListItemProps> = ({ id, data, toggleBought }) => (
 export const List: React.FC<ListProps> = ({ list, ...props }) => (
   <ul>
     {list.map((item, id) => (
-      <ListItem id={id} data={item} {...props} key={id} />
+      <ListItem id={id} data={item.data} {...props} key={id} />
     ))}
   </ul>
 );
