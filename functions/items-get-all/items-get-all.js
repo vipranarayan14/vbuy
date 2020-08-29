@@ -8,8 +8,6 @@ exports.handler = async (event) => {
 
     const response = await database.getAllItems();
 
-    console.log(response);
-
     return {
       statusCode: 200,
       body: JSON.stringify(response),
