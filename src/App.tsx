@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { ItemInput } from "./components/ItemInput";
 import { List } from "./components/List";
 
-import { ShoppingList } from "./state/ShoppingItems";
+import { ShoppingList } from "./state/ShoppingList";
 
 import styles from "./App.module.css";
 
