@@ -1,28 +1,34 @@
 import React, { useState, useEffect } from "react";
 
 import { ItemInput } from "./components/ItemInput";
-import { List, ListType } from "./components/List";
+import { List } from "./components/List";
 
 import { ShoppingList } from "./state/ShoppingItems";
 
 import styles from "./App.module.css";
 
 const App: React.FC = () => {
-  const [list, setList] = useState<ListType>([]);
+  const [list, setList] = useState<List>([]);
 
   const shoppingList = ShoppingList(list, setList);
 
   useEffect(() => {
-    shoppingList.load();
+    shoppingList.loadItems();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const { toggleBoughtForItem, deleteItem } = shoppingList;
 
   return (
     <div className={styles.App}>
       <header>
-        <ItemInput addToList={shoppingList.add} />
+        <ItemInput addToList={shoppingList.addItem} />
       </header>
       <main>
-        <List list={list} toggleBought={shoppingList.toggleBoughtForItem} />
+        <List
+          list={list}
+          toggleBoughtForItem={toggleBoughtForItem}
+          deleteItem={deleteItem}
+        />
       </main>
     </div>
   );
