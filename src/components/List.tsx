@@ -13,7 +13,7 @@ type ListProps = {
 };
 
 export const List: React.FC<ListProps> = ({ list, ...props }) => (
-  <ul>
+  <ul className={styles.List}>
     {list.map((item, id) => (
       <Item id={id} data={item.data} {...props} key={id} />
     ))}
