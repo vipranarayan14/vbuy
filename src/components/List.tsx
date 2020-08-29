@@ -4,19 +4,18 @@ import styles from "./List.module.css";
 
 import { Item } from "./Item";
 
-export type ListType = Array<ItemType>;
+export type List = Array<Item>;
 
 type ListProps = {
   list: List;
   toggleBoughtForItem: (id: number) => void;
-  list: ListType;
-  toggleBought: (id: number) => void;
+  deleteItem: (id: number) => void;
 };
 
 export const List: React.FC<ListProps> = ({ list, ...props }) => (
   <ul>
     {list.map((item, id) => (
-      <ListItem id={id} data={item.data} {...props} key={id} />
+      <Item id={id} data={item.data} {...props} key={id} />
     ))}
   </ul>
 );
