@@ -1,8 +1,5 @@
-import { ItemType as Item, ListType as List } from "../components/List";
-
-type setList = (list: List) => void;
-
-type stateModifier = (list: List, setList: setList) => any;
+import { List } from "../components/List";
+import { Item } from "../components/Item";
 
 const replaceItem = (list: List, id: number, newItem: any): List => [
   ...list.slice(0, id),
@@ -10,10 +7,13 @@ const replaceItem = (list: List, id: number, newItem: any): List => [
   ...list.slice(id + 1, list.length),
 ];
 
+const removeItem = (list: List, id: number) =>
+  list.filter((item, $id) => $id !== id);
+
 const byBought = (a: Item, b: Item) =>
   Number(a.data.bought) - Number(b.data.bought);
 
-const addItem = async (item: Item["data"]): Promise<Item> => {
+const requestAddItem = async (item: Item["data"]): Promise<Item> => {
   const response = await fetch("/api/item-add", {
     method: "POST",
     body: JSON.stringify(item),
@@ -22,38 +22,70 @@ const addItem = async (item: Item["data"]): Promise<Item> => {
   return response.json();
 };
 
-const getAllItems = async () => {
+const requestDeleteItem = async (item: Item): Promise<Boolean> => {
+  const response = await fetch("/api/item-delete", {
+    method: "DELETE",
+    body: JSON.stringify(item),
+  });
+
+  return response.ok;
+};
+
+const requestGetAllItems = async () => {
   const response = await fetch("/api/items-get-all");
 
-  const { data } = await response.json();
-
-  return data;
+  return response.json();
 };
+
+type setList = (list: List) => void;
+
+type stateModifier = (list: List, setList: setList) => any;
 
 const updateList = (newList: List, setList: setList) =>
   setList(newList.slice().sort(byBought));
 
-const add: stateModifier = (list, setList) => async (itemName: string) => {
-  const item = await addItem({ name: itemName, bought: false });
+const addItem: stateModifier = (list, setList) => async (itemName: string) => {
+  const item = await requestAddItem({ name: itemName, bought: false });
 
   setList([item].concat(list));
 };
 
-const load = (setList: setList) => async () => {
-  const list = await getAllItems();
+const deleteItem: stateModifier = (list, setList) => async (id: number) => {
+  const item = list[id];
 
-  updateList(list, setList);
+  const isDeleted = await requestDeleteItem(item);
+
+  if (isDeleted) {
+    updateList(removeItem(list, id), setList);
+  }
 };
 
-const toggleBought: stateModifier = (list, setList) => (id: number) => {
+const loadItems: stateModifier = (list, setList) => async () => {
+  const { data: $list } = await requestGetAllItems();
+
+  updateList($list, setList);
+};
+
+const toggleBoughtForItem: stateModifier = (list, setList) => (id: number) => {
   const item = list[id];
   const newItem = Object.assign({}, item, { bought: !item.data.bought });
 
   updateList(replaceItem(list, id, newItem), setList);
 };
 
-export const ShoppingList: stateModifier = (list, setList) => ({
-  add: add(list, setList),
-  load: load(setList),
-  toggleBoughtForItem: toggleBought(list, setList),
+type ShoppingList = (
+  list: List,
+  setList: setList
+) => {
+  addItem: (itemName: string) => void;
+  deleteItem: (id: number) => void;
+  loadItems: () => void;
+  toggleBoughtForItem: (id: number) => void;
+};
+
+export const ShoppingList: ShoppingList = (list, setList) => ({
+  addItem: addItem(list, setList),
+  deleteItem: deleteItem(list, setList),
+  loadItems: loadItems(list, setList),
+  toggleBoughtForItem: toggleBoughtForItem(list, setList),
 });
