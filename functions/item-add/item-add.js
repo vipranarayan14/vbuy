@@ -1,4 +1,4 @@
-const db = require("../db");
+const database = require("../../database");
 
 exports.handler = async (event) => {
   try {
@@ -6,7 +6,7 @@ exports.handler = async (event) => {
       return { statusCode: 500, body: "Only POST method is allowed." };
     }
 
-    const response = await db.addItem(JSON.parse(event.body));
+    const response = await database.addItem(JSON.parse(event.body));
 
     return {
       statusCode: 200,

@@ -1,4 +1,4 @@
-const db = require("../db");
+const database = require("../../database");
 
 exports.handler = async (event) => {
   try {
@@ -6,7 +6,7 @@ exports.handler = async (event) => {
       return { statusCode: 500, body: "Only GET method is allowed." };
     }
 
-    const response = await db.getAllItems();
+    const response = await database.getAllItems();
 
     console.log(response);
 
