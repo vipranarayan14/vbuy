@@ -1,10 +1,10 @@
 const { client, query } = require("./db");
 
-const add = async (item) =>
+const addItem = async (item) =>
   await client.query(
     query.Create(query.Collection("items"), {
       data: item,
     })
   );
 
-module.exports = add;
+module.exports = addItem;

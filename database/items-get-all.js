@@ -1,6 +1,6 @@
 const { client, query } = require("./db");
 
-const getAll = async () =>
+const getAllItems = async () =>
   await client.query(
     query.Map(
       query.Paginate(query.Match(query.Index("all_items"))),
@@ -8,4 +8,4 @@ const getAll = async () =>
     )
   );
 
-module.exports = getAll;
+module.exports = getAllItems;
