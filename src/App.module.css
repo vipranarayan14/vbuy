@@ -1,8 +1,7 @@
 .App {
   flex: 1;
-  justify-content: "center";
-  margin-top: 20;
-  padding: 10;
-  background-color: "#900";
-  max-width: 450;
+  justify-content: center;
+  margin-top: 20px;
+  padding: 10px;
+  max-width: 450px;
 }
