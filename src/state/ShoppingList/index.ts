@@ -5,7 +5,7 @@ import { byBought } from "../utils";
 import { addItem } from "./item-add";
 import { deleteItem } from "./item-delete";
 import { getItems } from "./items-get-all";
-import { updateItem } from "./item-toggle-bought";
+import { updateItem } from "./item-update";
 
 import { SetList, UpdateList } from "./_types";
 
@@ -16,7 +16,7 @@ type ShoppingList = (
   addItem: (itemName: string) => void;
   deleteItem: (id: number) => void;
   loadItems: () => void;
-  toggleBoughtForItem: (id: number) => void;
+  updateItem: (id: number, data: object) => void;
 };
 
 export const ShoppingList: ShoppingList = (list, setList) => {
@@ -27,6 +27,6 @@ export const ShoppingList: ShoppingList = (list, setList) => {
     addItem: addItem(list, updateList),
     deleteItem: deleteItem(list, updateList),
     loadItems: getItems(list, updateList),
-    toggleBoughtForItem: updateItem(list, updateList),
+    updateItem: updateItem(list, updateList),
   };
 };
