@@ -13,7 +13,7 @@ const App: React.FC = () => {
   const shoppingList = ShoppingList(list, setList);
 
   useEffect(() => {
-    shoppingList.loadItems();
+    shoppingList.getItems();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const { deleteItem, updateItem } = shoppingList;

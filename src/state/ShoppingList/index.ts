@@ -15,7 +15,7 @@ type ShoppingList = (
 ) => {
   addItem: (itemName: string) => void;
   deleteItem: (id: number) => void;
-  loadItems: () => void;
+  getItems: () => void;
   updateItem: (id: number, data: object) => void;
 };
 
@@ -26,7 +26,7 @@ export const ShoppingList: ShoppingList = (list, setList) => {
   return {
     addItem: addItem(list, updateList),
     deleteItem: deleteItem(list, updateList),
-    loadItems: getItems(list, updateList),
+    getItems: getItems(list, updateList),
     updateItem: updateItem(list, updateList),
   };
 };
