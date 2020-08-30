@@ -1,8 +1,8 @@
-const { client, query } = require("./db");
+const { client, q } = require("./db");
 
 const addItem = async (item) =>
   await client.query(
-    query.Create(query.Collection("items"), {
+    q.Create(q.Collection("items"), {
       data: item,
     })
   );

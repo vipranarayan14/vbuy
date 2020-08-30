@@ -4,6 +4,6 @@ const client = new faunadb.Client({
   secret: process.env.FAUNADB_SERVER_SECRET,
 });
 
-const { query } = faunadb;
+const { query: q } = faunadb;
 
-module.exports = { client, query };
+module.exports = { client, q };

@@ -1,10 +1,10 @@
-const { client, query } = require("./db");
+const { client, q } = require("./db");
 
 const getAllItems = async () =>
   await client.query(
-    query.Map(
-      query.Paginate(query.Match(query.Index("all_items"))),
-      query.Lambda("attr", query.Get(query.Var("attr")))
+    q.Map(
+      q.Paginate(q.Match(q.Index("all_items"))),
+      q.Lambda("attr", q.Get(q.Var("attr")))
     )
   );
 
