@@ -16,7 +16,7 @@ const App: React.FC = () => {
     shoppingList.loadItems();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const { toggleBoughtForItem, deleteItem } = shoppingList;
+  const { deleteItem, updateItem } = shoppingList;
 
   return (
     <div className={styles.App}>
@@ -24,11 +24,7 @@ const App: React.FC = () => {
         <ItemInput addToList={shoppingList.addItem} />
       </header>
       <main>
-        <List
-          list={list}
-          toggleBoughtForItem={toggleBoughtForItem}
-          deleteItem={deleteItem}
-        />
+        <List list={list} updateItem={updateItem} deleteItem={deleteItem} />
       </main>
     </div>
   );
