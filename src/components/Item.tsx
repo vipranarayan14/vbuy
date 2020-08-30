@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import styles from "./List.module.css";
 
@@ -7,30 +7,54 @@ export type Item = {
     name: string;
     bought: boolean;
   };
-  ref: object;
+  ref: {
+    "@ref": {
+      id: number;
+    };
+  };
   ts: number;
 };
 
-type ItemProps = {
-  id: number;
+type Props = {
+  refId: number;
   data: Item["data"];
-  toggleBoughtForItem: (id: number) => void;
-  deleteItem: (id: number) => void;
+  isEditing: boolean;
+  toggleBought: (refId: number) => void;
+  deleteItem: (refId: number) => void;
+  startEditing: (refId: number) => void;
+  updateName: (refId: number, name: string) => void;
 };
 
 const styleIfBought = (isBought: boolean): string =>
   isBought ? styles.ListItemBought : "";
 
-export const Item: React.FC<ItemProps> = ({
-  id,
-  data,
-  toggleBoughtForItem,
-  deleteItem,
-}) => (
-  <li
-    className={`${styles.ListItem} ${styleIfBought(data.bought)}`}
-    onClick={() => toggleBoughtForItem(id)}
-  >
-    {data.name} <button onClick={() => deleteItem(id)}>X</button>
-  </li>
-);
+export const Item: React.FC<Props> = ({ refId, data, isEditing, ...props }) => {
+  const [name, setName] = useState<string>(data.name);
+
+  return (
+    <li className={`${styles.ListItem} ${styleIfBought(data.bought)}`}>
+      {isEditing ? (
+        <>
+          <input
+            type="text"
+            name="itemName"
+            value={name}
+            onChange={({ target }) => setName(target.value)}
+          />
+          <button onClick={() => props.updateName(refId, name)}>Done</button>
+        </>
+      ) : (
+        <>
+          <span
+            className={styles.ListItemText}
+            onClick={() => props.toggleBought(refId)}
+          >
+            {data.name}
+          </span>{" "}
+          <button onClick={() => props.startEditing(refId)}>Edit</button>
+          <button onClick={() => props.deleteItem(refId)}>Delete</button>
+        </>
+      )}
+    </li>
+  );
+};
