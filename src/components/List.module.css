@@ -7,9 +7,13 @@
   border-color: "grey";
   background-color: "#ccc";
   border-width: 1;
+  list-style-type: disc;
 }
 
 .ListItemBought {
+  list-style-type: square;
+}
+
+.ListItemBought .ListItemText {
   text-decoration: line-through;
-  background-color: "#999";
 }
