@@ -5,13 +5,13 @@ import { removeItem } from "../utils";
 import { StateModifier } from "./_types";
 
 export const deleteItem: StateModifier = (list, updateList) => async (
-  id: number
+  refId: number
 ) => {
-  const item = list[id];
+  const isDeleted = await requestDeleteItem(refId);
 
-  const isDeleted = await requestDeleteItem(item);
+  const itemId = list.findIndex((item) => item.ref["@ref"].id === refId);
 
   if (isDeleted) {
-    updateList(removeItem(list, id));
+    updateList(removeItem(list, itemId));
   }
 };
