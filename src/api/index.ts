@@ -1,12 +1,12 @@
 import { Item } from "../components/Item";
 
-export const requestAddItem = async (data: Item["data"]): Promise<Item> => {
+export const requestAddItem = async (data: Item["data"]): Promise<Response> => {
   const response = await fetch("/api/item-add", {
     method: "POST",
     body: JSON.stringify(data),
   });
 
-  return response.json();
+  return response;
 };
 
 export const requestDeleteItem = async (refId: number): Promise<Boolean> => {
@@ -18,17 +18,20 @@ export const requestDeleteItem = async (refId: number): Promise<Boolean> => {
   return response.ok;
 };
 
-export const requestUpdateItem = async (refId: number, data: Item["data"]) => {
+export const requestUpdateItem = async (
+  refId: number,
+  data: Item["data"]
+): Promise<Boolean> => {
   const response = await fetch("/api/item-update", {
     method: "PATCH",
     body: JSON.stringify({ refId, data }),
   });
 
-  return response.json();
+  return response.ok;
 };
 
-export const requestGetAllItems = async () => {
+export const requestGetAllItems = async (): Promise<Response> => {
   const response = await fetch("/api/items-get-all");
 
-  return response.json();
+  return response;
 };
