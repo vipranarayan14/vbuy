@@ -1,17 +1,19 @@
-import { requestDeleteItem } from "../../api";
+import { requestUpdateList } from "../../api";
 
 import { removeItem } from "../utils";
 
 import { StateModifier } from "./_types";
 
 export const deleteItem: StateModifier = (list, updateList) => async (
-  refId: number
+  id: number
 ) => {
-  const itemId = list.findIndex((item) => item.ref["@ref"].id === refId);
+  const newItems = removeItem(list.items, id);
 
-  updateList(removeItem(list, itemId));
+  const newList = Object.assign({}, { ...list }, { items: newItems });
 
-  const isSuccess = await requestDeleteItem(refId);
+  updateList(newList);
+
+  const isSuccess = await requestUpdateList(newList);
 
   if (!isSuccess) updateList(list);
 };

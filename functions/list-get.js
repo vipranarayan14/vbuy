@@ -1,12 +1,12 @@
-const database = require("../../database");
+const database = require("../database");
 
 exports.handler = async (event) => {
   try {
-    if (event.httpMethod !== "GET") {
-      return { statusCode: 500, body: "Only GET method is allowed." };
+    if (event.httpMethod !== "POST") {
+      return { statusCode: 500, body: "Only POST method is allowed." };
     }
 
-    const response = await database.getAllItems();
+    const response = await database.getList(JSON.parse(event.body));
 
     return {
       statusCode: 200,

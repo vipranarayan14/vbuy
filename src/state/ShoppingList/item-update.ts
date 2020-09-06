@@ -1,21 +1,27 @@
 import { StateModifier } from "./_types";
 import { replaceItem } from "../utils";
-import { requestUpdateItem } from "../../api";
-import { Item } from "../../components/Item";
+import { requestUpdateList } from "../../api";
+import { Item } from "../../components/list.types";
 
 export const updateItem: StateModifier = (list, updateList) => async (
-  refId: number,
+  id: number,
   data: Item["data"]
 ) => {
-  const itemId = list.findIndex((item) => item.ref["@ref"].id === refId);
-  const item = list[itemId];
-  const newItem = Object.assign({}, item, { data });
+  const item = list.items.find(($item) => $item.id === id);
 
-  const newList = replaceItem(list, itemId, newItem);
+  if (!item) return;
+
+  const newData = Object.assign({}, { ...item.data }, { ...data });
+
+  const newItem = Object.assign({}, { ...item }, { data: newData });
+
+  const newItems = replaceItem(list.items, newItem);
+
+  const newList = Object.assign({}, { ...list }, { items: newItems });
 
   updateList(newList);
 
-  const isSuccess = await requestUpdateItem(refId, data);
+  const isSuccess = await requestUpdateList(newList);
 
   if (!isSuccess) updateList(list);
 };

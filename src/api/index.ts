@@ -1,37 +1,50 @@
-import { Item } from "../components/Item";
+import { List } from "../components/list.types";
 
-export const requestAddItem = async (data: Item["data"]): Promise<Response> => {
-  const response = await fetch("/api/item-add", {
+const captureHTTPErrors = (response: Response) => {
+  const isSuccess = response.ok;
+
+  if (!isSuccess) {
+    return Promise.reject(response);
+  }
+
+  return response;
+};
+
+const handleError = (error: Response) => {
+  let errorType: string;
+
+  if (typeof error.json === "function") {
+    errorType = "API Error";
+
+    error
+      .json()
+      .then((errorBody: JSON) => {
+        console.error(`${errorType}:`, errorBody);
+      })
+      .catch(() => {
+        console.error(`${errorType}:`, error.statusText);
+      });
+  } else {
+    errorType = "Fetch Error";
+
+    console.error(`${errorType}:`, error);
+  }
+
+  return null;
+};
+
+export const requestUpdateList = async (list: List): Promise<Response | null> =>
+  await fetch("/api/list-update", {
     method: "POST",
-    body: JSON.stringify(data),
-  });
+    body: JSON.stringify(list),
+  })
+    .then(captureHTTPErrors)
+    .catch(handleError);
 
-  return response;
-};
-
-export const requestDeleteItem = async (refId: number): Promise<Boolean> => {
-  const response = await fetch("/api/item-delete", {
-    method: "DELETE",
-    body: JSON.stringify(refId),
-  });
-
-  return response.ok;
-};
-
-export const requestUpdateItem = async (
-  refId: number,
-  data: Item["data"]
-): Promise<Boolean> => {
-  const response = await fetch("/api/item-update", {
-    method: "PATCH",
-    body: JSON.stringify({ refId, data }),
-  });
-
-  return response.ok;
-};
-
-export const requestGetAllItems = async (): Promise<Response> => {
-  const response = await fetch("/api/items-get-all");
-
-  return response;
-};
+export const requestGetList = async (id: string): Promise<Response | null> =>
+  await fetch("/api/list-get", {
+    method: "POST",
+    body: JSON.stringify({ id }),
+  })
+    .then(captureHTTPErrors)
+    .catch(handleError);

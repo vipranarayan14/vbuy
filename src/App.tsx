@@ -1,30 +1,36 @@
 import React, { useState, useEffect } from "react";
 
-import { ItemInput } from "./components/ItemInput";
-import { List } from "./components/List";
-
-import { ShoppingList } from "./state/ShoppingList";
+import { List as $List } from "./components/list.types";
 
 import styles from "./App.module.css";
 
+import { ShoppingList } from "./state/ShoppingList";
+
+import { ItemInput } from "./components/ItemInput";
+import { List } from "./components/List";
+
+const isEmpty = (list: object) => !Object.keys(list).length;
+
 const App: React.FC = () => {
-  const [list, setList] = useState<List>([]);
+  const [list, setList] = useState<$List>({} as $List);
 
   const shoppingList = ShoppingList(list, setList);
 
   useEffect(() => {
-    shoppingList.getItems();
+    shoppingList.getList("275383921178313222");
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const { deleteItem, updateItem } = shoppingList;
+  const { addItem, deleteItem, updateItem } = shoppingList;
 
   return (
     <div className={styles.App}>
       <header>
-        <ItemInput addToList={shoppingList.addItem} />
+        <ItemInput addItem={addItem} />
       </header>
       <main>
-        <List list={list} updateItem={updateItem} deleteItem={deleteItem} />
+        {!isEmpty(list) && (
+          <List list={list} updateItem={updateItem} deleteItem={deleteItem} />
+        )}
       </main>
     </div>
   );

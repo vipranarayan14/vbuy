@@ -5,10 +5,10 @@ import styles from "./ItemInput.module.css";
 type EventObject = React.ChangeEvent<HTMLInputElement>;
 
 type Props = {
-  addToList: (itemName: string) => void;
+  addItem: (itemName: string) => void;
 };
 
-export const ItemInput: React.FC<Props> = ({ addToList }) => {
+export const ItemInput: React.FC<Props> = ({ addItem }) => {
   const [text, setText] = useState<string>("");
 
   const handleChange = (e: EventObject) => {
@@ -16,7 +16,7 @@ export const ItemInput: React.FC<Props> = ({ addToList }) => {
   };
 
   const handleSubmit = () => {
-    addToList(text);
+    addItem(text);
     setText("");
   };
 

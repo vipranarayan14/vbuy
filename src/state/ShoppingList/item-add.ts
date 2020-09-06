@@ -1,20 +1,30 @@
-import { requestAddItem } from "../../api";
+import { requestUpdateList } from "../../api";
 
 import { StateModifier } from "./_types";
-import { Item } from "../../components/Item";
+import { List, Item } from "../../components/list.types";
+import { newId } from "../utils";
 
 export const addItem: StateModifier = (list, updateList) => async (
   itemName: string
 ) => {
-  const data = { name: itemName, bought: false };
+  const item: Item = {
+    id: newId(),
+    data: {
+      name: itemName,
+      desc: "",
+      bought: false,
+    },
+  };
 
-  const response = await requestAddItem(data);
+  const newItems = [item].concat(list.items);
 
-  const isSuccess = response.ok;
+  const newList: List = Object.assign({}, { ...list }, { items: newItems });
 
-  if (!isSuccess) return;
+  updateList(newList);
 
-  const item: Item = await response.json();
+  const response = await requestUpdateList(newList);
 
-  updateList([item].concat(list));
+  const isSuccess = response && response.ok;
+
+  if (!isSuccess) updateList(list);
 };

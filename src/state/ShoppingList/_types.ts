@@ -1,4 +1,4 @@
-import { List } from "../../components/List";
+import { List } from "../../components/list.types";
 
 export type SetList = (list: List) => void;
 

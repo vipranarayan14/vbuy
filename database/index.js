@@ -1,20 +1,22 @@
 const { client, q } = require("./faunadb");
 
-const addItem = async (data) =>
-  await client.query(q.Create(q.Collection("items"), { data }));
-
-const deleteItem = async (refId) =>
-  await client.query(q.Delete(q.Ref(q.Collection("items"), refId)));
-
-const updateItem = async (refId, data) =>
-  await client.query(q.Update(q.Ref(q.Collection("items"), refId), { data }));
-
-const getAllItems = async () =>
+const updateList = async ({ id, items }) =>
   await client.query(
-    q.Map(
-      q.Paginate(q.Match(q.Index("all_items"))),
-      q.Lambda("attr", q.Get(q.Var("attr")))
-    )
+    q.Update(q.Ref(q.Collection("lists"), id), {
+      data: { items },
+    })
   );
 
-module.exports = { getAllItems, addItem, deleteItem, updateItem };
+const getQuery = (id) =>
+  q.Let(
+    { list: q.Get(q.Ref(q.Collection("lists"), id)) },
+    {
+      items: q.Select(["data", "items"], q.Var("list")),
+      name: q.Select(["data", "name"], q.Var("list")),
+      id: q.Select(["ref", "id"], q.Var("list")),
+    }
+  );
+
+const getList = async ({ id }) => await client.query(getQuery(id));
+
+module.exports = { getList, updateList };

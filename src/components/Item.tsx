@@ -1,39 +1,26 @@
 import React, { useState } from "react";
 
 import styles from "./List.module.css";
+import { Item as $Item } from "./list.types";
 
-export type Item = {
-  data: {
-    name: string;
-    bought: boolean;
-  };
-  ref: {
-    "@ref": {
-      id: number;
-    };
-  };
-  ts: number;
-};
-
-type Props = {
-  refId: number;
-  data: Item["data"];
+type Props = $Item & {
+  id: number;
   isEditing: boolean;
-  toggleBought: (refId: number) => void;
-  deleteItem: (refId: number) => void;
-  startEditing: (refId: number) => void;
-  updateName: (refId: number, name: string) => void;
+  toggleBought: (id: number, bought: boolean) => void;
+  deleteItem: (id: number) => void;
+  startEditing: (id: number) => void;
+  updateName: (id: number, name: string) => void;
 };
 
 const styleIfBought = (isBought: boolean): string =>
   isBought ? styles.ListItemBought : "";
 
-export const Item: React.FC<Props> = ({ refId, data, isEditing, ...props }) => {
+export const Item: React.FC<Props> = ({ id, data, ...props }) => {
   const [name, setName] = useState<string>(data.name);
 
   return (
     <li className={`${styles.ListItem} ${styleIfBought(data.bought)}`}>
-      {isEditing ? (
+      {props.isEditing ? (
         <>
           <input
             type="text"
@@ -41,18 +28,18 @@ export const Item: React.FC<Props> = ({ refId, data, isEditing, ...props }) => {
             value={name}
             onChange={({ target }) => setName(target.value)}
           />
-          <button onClick={() => props.updateName(refId, name)}>Done</button>
+          <button onClick={() => props.updateName(id, name)}>Done</button>
         </>
       ) : (
         <>
           <span
             className={styles.ListItemText}
-            onClick={() => props.toggleBought(refId)}
+            onClick={() => props.toggleBought(id, !data.bought)}
           >
             {data.name}
           </span>{" "}
-          <button onClick={() => props.startEditing(refId)}>Edit</button>
-          <button onClick={() => props.deleteItem(refId)}>Delete</button>
+          <button onClick={() => props.startEditing(id)}>Edit</button>
+          <button onClick={() => props.deleteItem(id)}>Delete</button>
         </>
       )}
     </li>
